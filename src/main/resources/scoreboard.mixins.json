@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "si.bismuth.longscorestat.scoreboard.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "CommandResultsMixin",
+    "SavedScoreboardDataMixin",
+    "ScoreboardCommandMixin",
+    "ScoreboardMixin",
+    "ScoreboardScoreMixin",
+    "ServerPlayerEntityMixin",
+    "TriggerCommandMixin"
+  ],
+  "client": [
+    "GameGuiMixin",
+    "PlayerTabOverlayMixin"
+  ],
+  "server": [
+  ]
+}

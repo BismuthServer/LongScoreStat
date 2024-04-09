@@ -18,10 +18,13 @@ repositories {
 	// for more information about repositories.
 }
 
+loom {
+	accessWidenerPath = file("src/main/resources/longscorestat.accesswidener")
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings ploceus.featherMappings(project.feather_build)
-	nests ploceus.nests(project.nests_build) // remove this line if not using nests
 
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
