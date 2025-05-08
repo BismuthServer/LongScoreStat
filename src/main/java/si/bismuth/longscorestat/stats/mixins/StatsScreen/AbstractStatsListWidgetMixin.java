@@ -17,8 +17,8 @@ class AbstractStatsListWidgetMixin {
     @Shadow @Final
     StatsScreen statsScreen;
 
-    @Redirect(method = "m_0499830", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stat;format(I)Ljava/lang/String;"))
-    public String m_0499830(Stat instance, int value) {
+    @Redirect(method = "renderColumnEntry", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stat;format(I)Ljava/lang/String;"))
+    public String renderColumnEntry(Stat instance, int value) {
         return ((IStat) instance).bismuthServer$longFormat(((IPlayerStats) statsScreen.stats).bismuthServer$getLongStat(instance));
     }
 

@@ -15,7 +15,7 @@ public class ClientNetworkHandler {
         }
 
         if (LongScoreStatClient.minecraft.screen instanceof StatsListener) {
-            ((StatsListener)LongScoreStatClient.minecraft.screen).m_6496620();
+            ((StatsListener)LongScoreStatClient.minecraft.screen).createGui();
         }
     }
 }

@@ -5,4 +5,4 @@ accessible field net/minecraft/client/gui/screen/StatsScreen stats Lnet/minecraf
 accessible class net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget
 accessible class net/minecraft/client/gui/screen/StatsScreen$StatsListWidget
 accessible class net/minecraft/client/gui/screen/StatsScreen$AbstractStatsListWidget
-accessible field net/minecraft/client/gui/screen/StatsScreen$AbstractStatsListWidget f_2401102 I
+accessible field net/minecraft/client/gui/screen/StatsScreen$AbstractStatsListWidget statSortOrder I

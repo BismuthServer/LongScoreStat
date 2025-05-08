@@ -64,7 +64,7 @@ class StatsListWidgetStatComparatorMixin {
         long l = ((IPlayerStats) f_8630716.stats).bismuthServer$getLongStat(stat2);
         if (k != l) {
             int order = (k - l) > 0 ? 1 : -1;
-            cir.setReturnValue(order * f_0538466.f_2401102);
+            cir.setReturnValue(order * f_0538466.statSortOrder);
             cir.cancel();
             return;
         }
