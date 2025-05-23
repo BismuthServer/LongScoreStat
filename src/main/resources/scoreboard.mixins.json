@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "si.bismuth.longscorestat.scoreboard.mixins",
+  "package": "be.bismuth.longscorestat.scoreboard.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "CommandResultsMixin",

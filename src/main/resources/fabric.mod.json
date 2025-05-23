@@ -8,7 +8,7 @@
 		"dragonbabyfly"
 	],
 	"contact": {
-		"homepage": "https://bismuth.se/",
+		"homepage": "https://bismuth.be/",
 		"sources": "https://github.com/BismuthServer/LongScoreStat"
 	},
 	"license": "LGPL-3.0-or-later",
@@ -16,10 +16,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"init": [
-      "si.bismuth.longscorestat.LongScoreStat"
+      "be.bismuth.longscorestat.LongScoreStat"
 		],
     "client-init": [
-      "si.bismuth.longscorestat.LongScoreStatClient"
+      "be.bismuth.longscorestat.LongScoreStatClient"
     ]
 	},
 	"mixins": [
