@@ -15,10 +15,10 @@
 	"icon": "assets/example_mod/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"init": [
+		"main": [
       "be.bismuth.longscorestat.LongScoreStat"
 		],
-    "client-init": [
+    "client": [
       "be.bismuth.longscorestat.LongScoreStatClient"
     ]
 	},
@@ -28,10 +28,9 @@
 	],
   "accessWidener": "longscorestat.accesswidener",
 	"depends": {
-		"fabricloader": ">=0.14.21",
-		"minecraft": "1.12.2",
-    "osl-networking": ">=0.6.0",
-		"osl-entrypoints": ">=0.4.0",
-    "osl-lifecycle-events": ">=0.5.0"
+    "fabricloader": ">=0.17.2",
+    "minecraft": "~1.17.1",
+    "java": ">=16",
+    "fabric": "*"
 	}
 }

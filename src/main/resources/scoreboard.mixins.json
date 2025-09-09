@@ -1,8 +1,7 @@
 {
   "required": true,
-  "minVersion": "0.8",
   "package": "be.bismuth.longscorestat.scoreboard.mixins",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "CommandResultsMixin",
     "SavedScoreboardDataMixin",
@@ -17,5 +16,11 @@
     "PlayerTabOverlayMixin"
   ],
   "server": [
-  ]
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
 }

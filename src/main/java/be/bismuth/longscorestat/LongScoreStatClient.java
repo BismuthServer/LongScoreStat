@@ -1,8 +1,7 @@
 package be.bismuth.longscorestat;
 
+import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.Minecraft;
-import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer;
-import net.ornithemc.osl.lifecycle.api.client.MinecraftClientEvents;
 import be.bismuth.longscorestat.network.ClientNetworking;
 
 public class LongScoreStatClient implements ClientModInitializer {
@@ -10,7 +9,7 @@ public class LongScoreStatClient implements ClientModInitializer {
 	public static Minecraft minecraft;
 
 	@Override
-	public void initClient() {
+	public void onInitializeClient() {
 		MinecraftClientEvents.START.register(LongScoreStatClient::start);
 		MinecraftClientEvents.STOP.register(LongScoreStatClient::stop);
 	}
