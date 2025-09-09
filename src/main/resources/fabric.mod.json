@@ -23,7 +23,6 @@
     ]
 	},
 	"mixins": [
-    "scoreboard.mixins.json",
     "stats.mixins.json"
 	],
   "accessWidener": "longscorestat.accesswidener",

@@ -3,26 +3,25 @@
   "package": "be.bismuth.longscorestat.stats.mixins",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "DistanceFormatterMixin",
-    "DivideByTenFormatterMixin",
-    "NumberFormatterMixin",
-    "PlayerStatsMixin",
+    "PhantomSpawnerMixin",
+    "PlayerPredicateMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayerStatsMixin",
-    "StatCounterMixin",
-    "StatMixin",
-    "TimeFormatterMixin"
+    "ServerStatHandlerMixin",
+    "StatHandlerMixin",
+    "StatMixin"
   ],
   "client": [
-    "CraftPlanksTutorialStepMixin",
-    "FindTreeTutorialStepMixin",
-    "StatsScreen.AbstractStatsListWidgetMixin",
+    "CraftPlanksTutorialStepHandlerMixin",
+    "FindTreeTutorialStepHandlerMixin",
+    "StatsScreen.EntityStatsListWidgetEntryMixin",
     "StatsScreen.EntityStatsListWidgetMixin",
-    "StatsScreen.GeneralStatsListWidgetMixin",
+    "StatsScreen.EntryListWidgetMixin",
+    "StatsScreen.GeneralStatsListWidgetEntryMixin",
+    "StatsScreen.ItemStatsListWidgetAccessor",
+    "StatsScreen.ItemStatsListWidgetEntryMixin",
+    "StatsScreen.ItemStatsListWidgetItemComparatorMixin",
     "StatsScreen.ItemStatsListWidgetMixin",
-    "StatsScreen.ItemStatsListWidgetStatComparatorMixin",
-    "StatsScreen.StatsListWidgetMixin",
-    "StatsScreen.StatsListWidgetStatComparatorMixin"
+    "StatsScreen.StatsScreenMixin"
   ],
   "server": [
   ],

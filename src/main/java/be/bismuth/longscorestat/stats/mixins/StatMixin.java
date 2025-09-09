@@ -8,63 +8,26 @@ import org.spongepowered.asm.mixin.Shadow;
 import be.bismuth.longscorestat.stats.IStat;
 import be.bismuth.longscorestat.stats.LongStatFormatter;
 
+// TODO fix
 @Mixin(Stat.class)
 public class StatMixin implements IStat {
     @Shadow @Final
     private StatFormatter formatter;
-    @Override
+
+	@Override
     public String bismuthServer$longFormat(long value) {
-        return ((LongStatFormatter) this.formatter).bismuthServer$format(value);
-    }
-}
-
-@Mixin(targets = "net/minecraft/stat/Stat$1")
-class NumberFormatterMixin implements LongStatFormatter {
-    @Override
-    public String bismuthServer$format(long value) {
-        return Stat.NUMBER_FORMAT.format(value);
-    }
-}
-
-@Mixin(targets = "net/minecraft/stat/Stat$2")
-class TimeFormatterMixin implements LongStatFormatter {
-    @Override
-    public String bismuthServer$format(long value) {
-        double d = (double)value / 20.0;
-        double e = d / 60.0;
-        double f = e / 60.0;
-        double g = f / 24.0;
-        double h = g / 365.0;
-        if (h > 0.5) {
-            return Stat.DECIMAL_FORMAT.format(h) + " y";
-        } else if (g > 0.5) {
-            return Stat.DECIMAL_FORMAT.format(g) + " d";
-        } else if (f > 0.5) {
-            return Stat.DECIMAL_FORMAT.format(f) + " h";
-        } else {
-            return e > 0.5 ? Stat.DECIMAL_FORMAT.format(e) + " m" : d + " s";
-        }
-    }
-}
-
-@Mixin(targets = "net/minecraft/stat/Stat$3")
-class DistanceFormatterMixin implements LongStatFormatter {
-    @Override
-    public String bismuthServer$format(long value) {
-        double d = (double)value / 100.0;
-        double e = d / 1000.0;
-        if (e > 0.5) {
-            return Stat.DECIMAL_FORMAT.format(e) + " km";
-        } else {
-            return d > 0.5 ? Stat.DECIMAL_FORMAT.format(d) + " m" : value + " cm";
-        }
-    }
-}
-
-@Mixin(targets = "net/minecraft/stat/Stat$4")
-class DivideByTenFormatterMixin implements LongStatFormatter {
-    @Override
-    public String bismuthServer$format(long value) {
-        return Stat.DECIMAL_FORMAT.format((double)value * 0.1);
+		LongStatFormatter longStatFormatter;
+		if (this.formatter == StatFormatter.DEFAULT) {
+			longStatFormatter = LongStatFormatter.DEFAULT;
+		} else if (this.formatter == StatFormatter.TIME) {
+			longStatFormatter = LongStatFormatter.TIME;
+		} else if (this.formatter == StatFormatter.DISTANCE) {
+			longStatFormatter = LongStatFormatter.DISTANCE;
+		} else if (this.formatter == StatFormatter.DIVIDE_BY_TEN) {
+			longStatFormatter = LongStatFormatter.DIVIDE_BY_TEN;
+		} else {
+			throw new IllegalStateException("Unknown formatter: " + this.formatter);
+		}
+		return longStatFormatter.bismuthServer$format(value);
     }
 }

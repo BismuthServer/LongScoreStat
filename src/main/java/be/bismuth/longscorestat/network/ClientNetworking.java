@@ -1,33 +1,37 @@
 package be.bismuth.longscorestat.network;
 
-import net.ornithemc.osl.networking.api.client.ClientPlayNetworking;
-import be.bismuth.longscorestat.LongScoreStat;
+import be.bismuth.longscorestat.LongScoreStatClient;
+import be.bismuth.longscorestat.stats.IPlayerStats;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.gui.screen.StatsListener;
+import net.minecraft.stat.Stat;
+import net.minecraft.util.Identifier;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Map;
 
 public class ClientNetworking {
-	private final Set<String> allChannels = new HashSet<>();
-
 	public ClientNetworking() {
-		this.registerListener(StatisticsPacket::new, ClientNetworkHandler::handleStatistics);
+		this.handleStatistics();
 	}
 
-	private <T extends LongscorestatPacket> void registerListener(Supplier<T> initializer, Consumer<T> packetHandler) {
-		LongscorestatPacket p = initializer.get();
-		String channel = p.getChannel();
+	private void handleStatistics() {
+		Identifier channel = StatisticsPacket.channel;
 
-		if (this.allChannels.contains(channel)) {
-			LongScoreStat.LOGGER.error("Attempted to register packet '{}' on channel '{}' but it already exists!", p.getClass().getSimpleName(), channel);
-		} else {
-			this.allChannels.add(channel);
+		ClientPlayNetworking.registerReceiver(channel, (client, handler, buf, responseSender) -> {
+			StatisticsPacket packet = new StatisticsPacket(buf);
 
-			ClientPlayNetworking.registerListener(channel, initializer, (minecraft, handler, packet) -> {
-				packetHandler.accept(packet);
-				return true;
+			client.execute(() -> {
+				for(Map.Entry<Stat<?>, Long> entry : packet.getStats().entrySet()) {
+					Stat<?> stat = entry.getKey();
+					long i = entry.getValue();
+					assert LongScoreStatClient.minecraft.player != null;
+					((IPlayerStats) LongScoreStatClient.minecraft.player.getStatHandler()).bismuthServer$setLongStat(LongScoreStatClient.minecraft.player, stat, i);
+				}
+
+				if (LongScoreStatClient.minecraft.currentScreen instanceof StatsListener) {
+					((StatsListener)LongScoreStatClient.minecraft.currentScreen).onStatsReady();
+				}
 			});
-		}
+		});
 	}
 }
