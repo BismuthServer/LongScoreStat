@@ -9,3 +9,4 @@ accessible field net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget
 accessible field net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget blockStatTypes Ljava/util/List;
 accessible field net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget listOrder I
 accessible class net/minecraft/client/gui/screen/StatsScreen$GeneralStatsListWidget
+accessible class net/minecraft/client/gui/screen/StatsScreen$GeneralStatsListWidget$Entry
