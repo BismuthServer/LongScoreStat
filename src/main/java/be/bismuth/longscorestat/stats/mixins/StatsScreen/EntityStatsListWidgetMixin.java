@@ -46,7 +46,8 @@ class EntityStatsListWidgetEntryMixin {
 		iRef.set(i);
 
 		// This int will be used for checking if it is zero so returning an int is fine in this case
-		return (int) i;
+		// Clamp needed for when long value has zeros in all lower 32 bits, but non zero value in upper 32 bits
+		return (int) Math.min(i, 2147483647L);
 	}
 
 	@Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/StatHandler;getStat(Lnet/minecraft/stat/Stat;)I", ordinal = 1))
@@ -55,7 +56,8 @@ class EntityStatsListWidgetEntryMixin {
 		jRef.set(j);
 
 		// This int will be used for checking if it is zero so returning an int is fine in this case
-		return (int) j;
+		// Clamp needed for when long value has zeros in all lower 32 bits, but non zero value in upper 32 bits
+		return (int) Math.min(j, 2147483647L);
 	}
 
 	@Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/StatsScreen$EntityStatsListWidget$Entry;killedAny:Z", ordinal = 1, opcode = Opcodes.PUTFIELD))

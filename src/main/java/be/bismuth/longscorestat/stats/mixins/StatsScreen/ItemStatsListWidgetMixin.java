@@ -47,7 +47,8 @@ class ItemStatsListWidgetEntryMixin {
 	public int render(StatHandler instance, Stat<?> stat, @Share("long") LocalLongRef longRef) {
 		long value = ((IPlayerStats) instance).bismuthServer$getLongStat(stat);
 		longRef.set(value);
-		return (int) value;
+		// Clamp needed for when long value has zeros in all lower 32 bits, but non zero value in upper 32 bits
+		return (int) Math.min(value, 2147483647L);
 	}
 
 	@Redirect(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/stat/Stat;IIZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stat;format(I)Ljava/lang/String;"))

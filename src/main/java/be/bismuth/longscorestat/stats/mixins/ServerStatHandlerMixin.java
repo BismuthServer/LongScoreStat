@@ -92,7 +92,9 @@ public abstract class ServerStatHandlerMixin extends StatHandlerMixin {
     @Redirect(method = "sendStats", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/ServerStatHandler;getStat(Lnet/minecraft/stat/Stat;)I"))
     public int sendStatsVanilla(ServerStatHandler instance, Stat<?> stat) {
         // Cast all the long stats to int
-        return (int) ((IPlayerStats) instance).bismuthServer$getLongStat(stat);
+		long value = ((IPlayerStats) instance).bismuthServer$getLongStat(stat);
+		// If over max integer limit, just return max integer value
+        return (int) Math.min(value, 2147483647L);
     }
 
 	@Inject(method = "asString", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntMap;object2IntEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;", remap = false))
@@ -115,6 +117,7 @@ public abstract class ServerStatHandlerMixin extends StatHandlerMixin {
 		long value = nbtCompound2x.getLong(string2);
 
 		this.counters.put(stat, value);
-		return i;
+		// Clamp needed for when long value has zeros in all lower 32 bits, but non zero value in upper 32 bits
+		return (int) Math.min(value, 2147483647L);
 	}
 }
