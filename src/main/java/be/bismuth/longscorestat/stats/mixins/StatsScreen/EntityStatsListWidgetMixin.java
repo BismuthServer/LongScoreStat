@@ -9,10 +9,8 @@ import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -60,12 +58,12 @@ class EntityStatsListWidgetEntryMixin {
 		return (int) j;
 	}
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;<init>(Ljava/lang/String;[Ljava/lang/Object;)V", ordinal = 1, shift = At.Shift.AFTER))
+	@Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/StatsScreen$EntityStatsListWidget$Entry;killedAny:Z", ordinal = 1, opcode = Opcodes.PUTFIELD))
 	void killedText(StatsScreen.EntityStatsListWidget entityStatsListWidget, EntityType<?> entityType, CallbackInfo ci, @Share("i") LocalLongRef iRef) {
 		this.killedText = new TranslatableText("stat_type.minecraft.killed", iRef.get(), this.entityTypeName);
 	}
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/TranslatableText;<init>(Ljava/lang/String;[Ljava/lang/Object;)V", ordinal = 3, shift = At.Shift.AFTER))
+	@Inject(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/StatsScreen$EntityStatsListWidget$Entry;killedByAny:Z", ordinal = 1, opcode = Opcodes.PUTFIELD))
 	void killedByText(StatsScreen.EntityStatsListWidget entityStatsListWidget, EntityType<?> entityType, CallbackInfo ci, @Share("j") LocalLongRef jRef) {
 		this.killedByText = new TranslatableText("stat_type.minecraft.killed_by", this.entityTypeName, jRef.get());
 	}
