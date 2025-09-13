@@ -7,8 +7,13 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(StatsScreen.class)
 public class StatsScreenMixin {
+	@ModifyConstant(method = "getColumnX", constant = @Constant(intValue = 115))
+	public int getColumnX1(int original) {
+		return 135;
+	}
+
 	@ModifyConstant(method = "getColumnX", constant = @Constant(intValue = 40))
-	public int getColumnX(int original) {
+	public int getColumnX2(int original) {
 		return 80;
 	}
 }

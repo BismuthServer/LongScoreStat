@@ -37,7 +37,7 @@ class ItemStatsListWidgetMixin {
 
 	@ModifyConstant(method = "getScrollbarPositionX", constant = @Constant(intValue = 140))
 	public int getScrollbarPositionX(int original) {
-		return 230;
+		return 250;
 	}
 }
 
