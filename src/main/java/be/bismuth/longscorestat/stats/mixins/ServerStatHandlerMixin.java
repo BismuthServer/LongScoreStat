@@ -95,7 +95,7 @@ public abstract class ServerStatHandlerMixin extends StatHandlerMixin {
         return (int) ((IPlayerStats) instance).bismuthServer$getLongStat(stat);
     }
 
-	@Inject(method = "asString", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntMap;object2IntEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;"), remap = false)
+	@Inject(method = "asString", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntMap;object2IntEntrySet()Lit/unimi/dsi/fastutil/objects/ObjectSet;", remap = false))
 	public void asStringInject(CallbackInfoReturnable<String> cir, @Local Map<StatType<?>, JsonObject> map) {
 		// Just to make sure the local ref is created after the map
 		for (Object2LongMap.Entry<Stat<?>> entry : this.counters.object2LongEntrySet()) {
@@ -110,7 +110,7 @@ public abstract class ServerStatHandlerMixin extends StatHandlerMixin {
 		instance.putLong(key, jsonPrimitive.getAsLong());
 	}
 
-	@Redirect(method = "method_17990", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntMap;put(Ljava/lang/Object;I)I"), remap = false)
+	@Redirect(method = "method_17990", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntMap;put(Ljava/lang/Object;I)I", remap = false))
 	int parse(Object2IntMap<Stat<?>> instance, Object o, int i, @Local(argsOnly = true) Stat<?> stat, @Local(argsOnly = true) String string2, @Local(argsOnly = true) NbtCompound nbtCompound2x) {
 		long value = nbtCompound2x.getLong(string2);
 
