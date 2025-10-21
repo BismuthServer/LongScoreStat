@@ -1,30 +1,34 @@
 {
   "required": true,
-  "minVersion": "0.8",
   "package": "be.bismuth.longscorestat.stats.mixins",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "DistanceFormatterMixin",
-    "DivideByTenFormatterMixin",
-    "NumberFormatterMixin",
-    "PlayerStatsMixin",
+    "PhantomSpawnerMixin",
+    "PlayerPredicateMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayerStatsMixin",
-    "StatCounterMixin",
-    "StatMixin",
-    "TimeFormatterMixin"
+    "ServerStatHandlerMixin",
+    "StatHandlerMixin",
+    "StatMixin"
   ],
   "client": [
-    "CraftPlanksTutorialStepMixin",
-    "FindTreeTutorialStepMixin",
-    "StatsScreen.AbstractStatsListWidgetMixin",
+    "CraftPlanksTutorialStepHandlerMixin",
+    "FindTreeTutorialStepHandlerMixin",
+    "StatsScreen.EntityStatsListWidgetEntryMixin",
     "StatsScreen.EntityStatsListWidgetMixin",
+    "StatsScreen.GeneralStatsListWidgetEntryMixin",
     "StatsScreen.GeneralStatsListWidgetMixin",
+    "StatsScreen.ItemStatsListWidgetAccessor",
+    "StatsScreen.ItemStatsListWidgetEntryMixin",
+    "StatsScreen.ItemStatsListWidgetItemComparatorMixin",
     "StatsScreen.ItemStatsListWidgetMixin",
-    "StatsScreen.ItemStatsListWidgetStatComparatorMixin",
-    "StatsScreen.StatsListWidgetMixin",
-    "StatsScreen.StatsListWidgetStatComparatorMixin"
+    "StatsScreen.StatsScreenMixin"
   ],
   "server": [
-  ]
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
 }

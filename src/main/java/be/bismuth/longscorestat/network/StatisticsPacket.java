@@ -1,53 +1,58 @@
 package be.bismuth.longscorestat.network;
 
-import com.google.common.collect.Maps;
+import be.bismuth.longscorestat.LongScoreStat;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.stat.Stat;
-import net.minecraft.stat.Stats;
+import net.minecraft.stat.StatType;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.io.IOException;
 import java.util.Map;
 
 public class StatisticsPacket implements LongscorestatPacket {
-    private Map<Stat, Long> stats;
+	static public Identifier channel = new Identifier(LongScoreStat.MOD_ID, "stats");
+    private Object2LongOpenHashMap<Stat<?>> stats;
 
-    public StatisticsPacket() {
-    }
-
-    public StatisticsPacket(Map<Stat, Long> stats) {
+    public StatisticsPacket(Object2LongOpenHashMap<Stat<?>> stats) {
         this.stats = stats;
     }
 
-    @Override
-    public String getChannel() {
-        return "LongScoreStats|Stats";
-    }
+	public StatisticsPacket(PacketByteBuf buf) {
+		try {
+			this.read(buf);
+		} catch (IOException e) {
+			LongScoreStat.LOGGER.error("Failed to read StatisticsPacket", e);
+		}
+	}
+
+	private static <T> Stat<T> getStat(StatType<T> statType, int id) {
+		return statType.getOrCreateStat(statType.getRegistry().get(id));
+	}
+
+	private <T> int getStatNetworkId(Stat<T> stat) {
+		return stat.getType().getRegistry().getRawId(stat.getValue());
+	}
 
     @Override
-    public void read(PacketByteBuf buffer) throws IOException {
-        int i = buffer.readVarInt();
-        this.stats = Maps.newHashMap();
-
-        for(int j = 0; j < i; ++j) {
-            Stat stat = Stats.byKey(buffer.readString(32767));
-            long k = buffer.readVarLong();
-            if (stat != null) {
-                this.stats.put(stat, k);
-            }
-        }
+    public void read(PacketByteBuf buf) throws IOException {
+		this.stats = buf.readMap(Object2LongOpenHashMap::new, bufx -> {
+			int i = bufx.readVarInt();
+			int j = bufx.readVarInt();
+			return getStat(Registry.STAT_TYPE.get(i), j);
+		}, PacketByteBuf::readVarLong);
     }
 
-    @Override
-    public void write(PacketByteBuf buffer) throws IOException {
-        buffer.writeVarInt(this.stats.size());
+	@Override
+	public void write(PacketByteBuf buf) {
+		buf.writeMap(this.stats, (bufx, stat) -> {
+			bufx.writeVarInt(Registry.STAT_TYPE.getRawId(stat.getType()));
+			bufx.writeVarInt(this.getStatNetworkId(stat));
+		}, PacketByteBuf::writeVarLong);
+	}
 
-        for(Map.Entry<Stat, Long> entry : this.stats.entrySet()) {
-            buffer.writeString(entry.getKey().key);
-            buffer.writeVarLong(entry.getValue());
-        }
-    }
-
-    public Map<Stat, Long> getStats() {
+    public Map<Stat<?>, Long> getStats() {
         return this.stats;
     }
 }

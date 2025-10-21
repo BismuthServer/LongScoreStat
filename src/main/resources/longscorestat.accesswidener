@@ -1,8 +1,12 @@
 accessWidener v2 named
-accessible field net/minecraft/stat/Stat NUMBER_FORMAT Ljava/text/NumberFormat;
-accessible field net/minecraft/stat/Stat DECIMAL_FORMAT Ljava/text/DecimalFormat;
-accessible field net/minecraft/client/gui/screen/StatsScreen stats Lnet/minecraft/stat/PlayerStats;
+accessible field net/minecraft/client/gui/screen/StatsScreen statHandler Lnet/minecraft/stat/StatHandler;
+accessible class net/minecraft/client/gui/screen/StatsScreen$EntityStatsListWidget
+accessible class net/minecraft/client/gui/screen/StatsScreen$EntityStatsListWidget$Entry
 accessible class net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget
-accessible class net/minecraft/client/gui/screen/StatsScreen$StatsListWidget
-accessible class net/minecraft/client/gui/screen/StatsScreen$AbstractStatsListWidget
-accessible field net/minecraft/client/gui/screen/StatsScreen$AbstractStatsListWidget statSortOrder I
+accessible class net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget$Entry
+accessible class net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget$ItemComparator
+accessible field net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget selectedStatType Lnet/minecraft/stat/StatType;
+accessible field net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget blockStatTypes Ljava/util/List;
+accessible field net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget listOrder I
+accessible class net/minecraft/client/gui/screen/StatsScreen$GeneralStatsListWidget
+accessible class net/minecraft/client/gui/screen/StatsScreen$GeneralStatsListWidget$Entry

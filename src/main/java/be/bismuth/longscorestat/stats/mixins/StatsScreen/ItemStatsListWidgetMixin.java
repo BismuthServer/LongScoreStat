@@ -1,74 +1,95 @@
 package be.bismuth.longscorestat.stats.mixins.StatsScreen;
 
-import com.llamalad7.mixinextras.sugar.Local;
+import be.bismuth.longscorestat.stats.IPlayerStats;
+import be.bismuth.longscorestat.stats.IStat;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalLongRef;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.StatsScreen;
-import net.minecraft.stat.ItemStat;
-import net.minecraft.stat.PlayerStats;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.stat.Stat;
+import net.minecraft.stat.StatHandler;
+import net.minecraft.stat.StatType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import be.bismuth.longscorestat.stats.IPlayerStats;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(StatsScreen.ItemStatsListWidget.class)
 class ItemStatsListWidgetMixin {
     @Shadow @Final
-    StatsScreen f_2839217;
+    StatsScreen field_18752;
 
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/PlayerStats;get(Lnet/minecraft/stat/Stat;)I")
-    )
-    public int init(PlayerStats instance, Stat stat) {
-        return ((IPlayerStats) f_2839217.stats).bismuthServer$getLongStat(stat) > 0L ? 1 : 0;
+    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/StatHandler;getStat(Lnet/minecraft/stat/Stat;)I"))
+    public int init(StatHandler instance, Stat<?> stat) {
+        return ((IPlayerStats) field_18752.statHandler).bismuthServer$getLongStat(stat) > 0L ? 1 : 0;
     }
 
-    @ModifyConstant(method = "*", constant = @Constant(intValue = 115))
-    private int injected1(int value) {
-        return 140;
-    }
+	@ModifyConstant(method = "getRowWidth", constant = @Constant(intValue = 375))
+	public int getRowWidth(int original) {
+		return 600;
+	}
 
-    @ModifyConstant(method = "*", constant = @Constant(intValue = 165))
-    private int injected2(int value) {
-        return 240;
-    }
-
-    @ModifyConstant(method = "*", constant = @Constant(intValue = 215))
-    private int injected3(int value) {
-        return 340;
-    }
-
-    @ModifyConstant(method = "*", constant = @Constant(intValue = 265))
-    private int injected4(int value) {
-        return 440;
-    }
-
-    @ModifyConstant(method = "*", constant = @Constant(intValue = 315))
-    private int injected5(int value) {
-        return 540;
-    }
+	@ModifyConstant(method = "getScrollbarPositionX", constant = @Constant(intValue = 140))
+	public int getScrollbarPositionX(int original) {
+		return 250;
+	}
 }
 
-@Mixin(targets = "net/minecraft/client/gui/screen/StatsScreen$ItemStatsListWidget$1")
-class ItemStatsListWidgetStatComparatorMixin {
-    @Shadow @Final
-    StatsScreen f_5153485;
+@Mixin(StatsScreen.ItemStatsListWidget.Entry.class)
+class ItemStatsListWidgetEntryMixin {
+	@Redirect(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/stat/Stat;IIZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/StatHandler;getStat(Lnet/minecraft/stat/Stat;)I"))
+	public int render(StatHandler instance, Stat<?> stat, @Share("long") LocalLongRef longRef) {
+		long value = ((IPlayerStats) instance).bismuthServer$getLongStat(stat);
+		longRef.set(value);
+		// Clamp needed for when long value has zeros in all lower 32 bits, but non zero value in upper 32 bits
+		return (int) Math.min(value, 2147483647L);
+	}
 
-    @Shadow @Final
-    StatsScreen.ItemStatsListWidget f_7207520;
+	@Redirect(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/stat/Stat;IIZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stat;format(I)Ljava/lang/String;"))
+	public String format(Stat<?> stat, int value, @Share("long") LocalLongRef longRef) {
+		return ((IStat) stat).bismuthServer$longFormat(longRef.get());
+	}
+}
 
-    @Inject(method = "compare(Lnet/minecraft/stat/ItemStat;Lnet/minecraft/stat/ItemStat;)I", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/PlayerStats;get(Lnet/minecraft/stat/Stat;)I"), cancellable = true)
-    public void compare(ItemStat itemStat, ItemStat itemStat2, CallbackInfoReturnable<Integer> cir, @Local(ordinal = 0) Stat stat, @Local(ordinal = 1) Stat stat2, @Local(ordinal = 0) int i, @Local(ordinal = 1) int j) {
-        long k = ((IPlayerStats) f_5153485.stats).bismuthServer$getLongStat(stat);
-        long l = ((IPlayerStats) f_5153485.stats).bismuthServer$getLongStat(stat2);
-        if (k != l) {
-            int order = (k - l) > 0 ? 1 : -1;
-            cir.setReturnValue(order * f_7207520.statSortOrder);
-            cir.cancel();
-            return;
-        }
+@Mixin(StatsScreen.ItemStatsListWidget.ItemComparator.class)
+class ItemStatsListWidgetItemComparatorMixin {
+	@Shadow @Final
+	StatsScreen.ItemStatsListWidget field_2662;
 
-        cir.setReturnValue(i - j);
-        cir.cancel();
-    }
+	/**
+	 * @author thdaele
+	 * @reason well too much changes, doing it any other way is just pain
+	 */
+	@Overwrite
+	public int compare(StatsScreen.ItemStatsListWidget.Entry entry, StatsScreen.ItemStatsListWidget.Entry entry2) {
+		Item item = entry.getItem();
+		Item item2 = entry2.getItem();
+		long i;
+		long j;
+		StatsScreen screen = ((ItemStatsListWidgetAccessor) field_2662).getField_18752();
+		IPlayerStats stats = (IPlayerStats) screen.statHandler;
+		if (field_2662.selectedStatType == null) {
+			i = 0;
+			j = 0;
+		} else if (field_2662.blockStatTypes.contains(field_2662.selectedStatType)) {
+			StatType<Block> statType = (StatType<Block>) field_2662.selectedStatType;
+
+			i = item instanceof BlockItem ? stats.bismuthServer$getStat(statType, ((BlockItem)item).getBlock()) : -1;
+			j = item2 instanceof BlockItem ? stats.bismuthServer$getStat(statType, ((BlockItem)item2).getBlock()) : -1;
+		} else {
+			StatType<Item> statType = (StatType<Item>) field_2662.selectedStatType;
+			i = stats.bismuthServer$getStat(statType, item);
+			j = stats.bismuthServer$getStat(statType, item2);
+		}
+
+		return i == j
+			? field_2662.listOrder * Integer.compare(Item.getRawId(item), Item.getRawId(item2))
+			: field_2662.listOrder * Long.compare(i, j);
+	}
 }
